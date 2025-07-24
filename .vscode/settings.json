@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "stack": "cpp",
+        "game-routes": "cpp",
+        "longest-flight": "cpp",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "xutility": "cpp",
+        "minimizing-coins": "cpp",
+        "coin-combination-1": "cpp",
+        "edit-distance": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp",
+        "utility": "cpp",
+        "counting-bits": "cpp"
+    }
+}

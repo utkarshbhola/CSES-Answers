@@ -1,0 +1,15 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    long long n;
+    cin >> n;
+    long long cnt = 0;
+
+    for (long long i = 1; i <= n; i++) {
+        cnt += __builtin_popcountll(i);  // GCC built-in for 64-bit popcount
+    }
+
+    cout << cnt << endl;
+    return 0;
+}

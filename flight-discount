@@ -1,0 +1,50 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+
+#define ll long long
+#define pii pair<ll, int>
+const ll INF = 1e18;
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<pair<int, ll>>> adj(n + 1);
+    for (int i = 0; i < m; ++i) {
+        int a, b;
+        ll c;
+        cin >> a >> b >> c;
+        adj[a].emplace_back(b, c);
+    }
+
+    vector<vector<ll>> dist(n + 1, vector<ll>(2, INF));
+    priority_queue<tuple<ll, int, int>, vector<tuple<ll, int, int>>, greater<>> pq;
+
+    dist[1][0] = 0;
+    pq.emplace(0, 1, 0); // {cost, node, used_coupon}
+
+    while (!pq.empty()) {
+        auto [cost, u, used] = pq.top(); pq.pop();
+        if (cost > dist[u][used]) continue;
+
+        for (auto &[v, w] : adj[u]) {
+            // Move without using coupon
+            if (dist[v][used] > cost + w) {
+                dist[v][used] = cost + w;
+                pq.emplace(dist[v][used], v, used);
+            }
+
+            // Use coupon (only if not used yet)
+            if (!used && dist[v][1] > cost + w / 2) {
+                dist[v][1] = cost + w / 2;
+                pq.emplace(dist[v][1], v, 1);
+            }
+        }
+    }
+
+    cout << dist[n][1] << endl; // minimum cost to reach node n having used coupon
+    return 0;
+}

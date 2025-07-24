@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n + 1);  // 1-indexed
+    vector<int> in_degree(n + 1, 0);
+
+    // Read requirements and build graph
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        adj[a].push_back(b);
+        in_degree[b]++;
+    }
+
+    // Kahn's algorithm
+    queue<int> q;
+    vector<int> order;
+
+    // Push all nodes with in-degree 0
+    for (int i = 1; i <= n; i++) {
+        if (in_degree[i] == 0)
+            q.push(i);
+    }
+
+    while (!q.empty()) {
+        int course = q.front();
+        q.pop();
+        order.push_back(course);
+        for (int next : adj[course]) {
+            in_degree[next]--;
+            if (in_degree[next] == 0)
+                q.push(next);
+        }
+    }
+
+    // If topological sort includes all courses
+    if (order.size() == n) {
+        for (int x : order)
+            cout << x << " ";
+        cout << "\n";
+    } else {
+        cout << "IMPOSSIBLE\n";
+    }
+
+    return 0;
+}

@@ -1,0 +1,72 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<stack>
+#include<algorithm>
+using namespace std;
+
+int main() {
+    long long n, m;
+    cin >> n >> m;
+    vector<vector<long long>> adj(n + 1);  // 1-indexed
+    vector<long long> in_degree(n + 1, 0);
+
+    for (int i = 0; i < m; i++) {
+        long long u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        in_degree[v]++;
+    }
+
+    // Kahn's algorithm
+    queue<long long> q;
+    vector<long long> order;
+    for (long long i = 1; i <= n; i++) {
+        if (in_degree[i] == 0)
+            q.push(i);
+    }
+
+    while (!q.empty()) {
+        long long u = q.front();
+        q.pop();
+        order.push_back(u);
+        for (long long v : adj[u]) {
+            in_degree[v]--;
+            if (in_degree[v] == 0)
+                q.push(v);
+        }
+    }
+
+    vector<long long> dp(n + 1, -1);      // -1 = unreachable
+    vector<long long> parent(n + 1, -1);
+    dp[1] = 0; // Starting from city 1, length is 0
+
+    for (long long u : order) {
+        if (dp[u] == -1) continue;
+        for (long long v : adj[u]) {
+            if (dp[v] < dp[u] + 1) {
+                dp[v] = dp[u] + 1;
+                parent[v] = u;
+            }
+        }
+    }
+
+    if (dp[n] == -1) {
+        cout << "IMPOSSIBLE\n";
+    } else {
+        cout << dp[n] + 1 << endl;  // Number of cities = edges + 1
+        stack<long long> path;
+        long long curr = n;
+        while (curr != -1) {
+            path.push(curr);
+            curr = parent[curr];
+        }
+        while (!path.empty()) {
+            cout << path.top() << " ";
+            path.pop();
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

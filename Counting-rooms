@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+void dfs(int row, int col, vector<vector<bool>>& visited, vector<vector<char>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+    int drow[] = {-1, 0, 1, 0};
+    int dcol[] = {0, 1, 0, -1};
+    visited[row][col] = true;
+    
+    for(int i = 0; i < 4; i++) {
+        int newRow = row + drow[i];
+        int newCol = col + dcol[i];
+        if(newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && 
+           grid[newRow][newCol] == '.' && !visited[newRow][newCol]) {
+            visited[newRow][newCol] = true;
+            dfs(newRow, newCol, visited, grid);
+        }
+    }
+}
+void bfs(int row, int col , vector<vector<bool>>& visited, vector<vector<char>>& grid){
+    int n = grid.size();
+    int m = grid[0].size();
+    int drow[] = {-1,0,1,0};
+    int dcol[] = {0,1,0,-1};
+    visited[row][col] = true;
+    queue<pair<int,int>> q;
+    q.push({row, col});
+    while(!q.empty()){
+        int r = q.front().first;
+        int c = q.front().second;
+        q.pop();
+        for(int i = 0; i < 4; i++){
+            int newRow = r + drow[i];
+            int newCol = c + dcol[i];
+            if(newRow >= 0 && newRow < n && newCol >= 0 && newCol < m && 
+               grid[newRow][newCol] == '.' && !visited[newRow][newCol]){
+                visited[newRow][newCol] = true;
+                q.push({newRow, newCol});
+            }
+        }
+    }
+}
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<char>> grid(n, vector<char>(m));
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            cin >> grid[i][j];
+        }
+    }
+    vector<vector<bool>> visited(n, vector<bool>(m, false));
+    int roomCount = 0;
+    for(int i = 0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j] == '.' && !visited[i][j]){
+                roomCount++;
+                dfs(i,j,visited, grid);
+            }
+        }
+    }
+    cout<<roomCount<<endl;
+    return 0;
+}
